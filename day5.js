@@ -1,5 +1,112 @@
 // https://adventofcode.com/2024/day/5
 
+// lvl1
+
+// change rulesTest -> rules
+const rulesMap = rules.split('\n').reduce((map, line) => {
+    const [num1, num2] = line.split('|').map(Number);
+    const key = '' + num1 + num2;
+    map[key] = true; // if the key passed correctly, than the rule was followed
+    return map;
+}, {});
+
+function solveFirstPuzzle(input) {
+    const inputArray = input.split('\n').map(line => line.split(',').map(Number));
+
+    let correctUpdatesIndexes = [];
+
+    for (let i = 0; i < inputArray.length; i++) {
+
+        let isLineValid = true;
+        
+        for (let j = 0; j < inputArray[i].length; j++) {
+
+            let k = j + 1;
+            while (isLineValid && k < inputArray[i].length) {
+                isLineValid = validateTwoNumbersWithRule(inputArray[i][j], inputArray[i][k]);
+                k++;
+            }
+        }
+        if (isLineValid) {
+            correctUpdatesIndexes.push(i);
+        }
+    }
+
+    console.log(correctUpdatesIndexes);
+    let result = sumMiddleEntries(inputArray, correctUpdatesIndexes);
+    console.log(`sum: ${result}`);
+}
+
+function validateTwoNumbersWithRule(num1, num2) {
+
+    let key = '' + num1 + num2;
+    if (rulesMap[key]) {
+        return true; // num1 comes before num2
+    }
+
+    return false; // num1 does not come before num2
+}
+
+function sumMiddleEntries(array, correctIndexes) {
+    let result = 0;
+
+    for (let i = 0; i < correctIndexes.length; i++) {
+        let line = array[correctIndexes[i]];
+        let middleIndex = Math.floor(line.length / 2);
+        result += line[middleIndex]; // Fix: Access the correct line
+    }
+
+    return result;
+}
+
+
+
+// lvl 2
+
+function solveSecondPuzzle(input) {
+    const inputArray = input.split('\n').map(line => line.split(',').map(Number));
+
+    let falseUpdatesIndexes = [];
+
+    for (let i = 0; i < inputArray.length; i++) {
+
+        let isLineValid = true;
+        
+        for (let j = 0; j < inputArray[i].length; j++) {
+
+            let k = j + 1;
+            while (isLineValid && k < inputArray[i].length) {
+                isLineValid = validateTwoNumbersWithRule(inputArray[i][j], inputArray[i][k]);
+                k++;
+            }
+        }
+        if (!isLineValid) {
+            falseUpdatesIndexes.push(i);
+        }
+    }
+
+    let sumOfMiddleNumbers = 0;
+
+    falseUpdatesIndexes.forEach(index => {
+        const unorderedUpdate = inputArray[index];
+        const orderedUpdate = reorderUpdate(unorderedUpdate); // Reorder update
+        const middleIndex = Math.floor(orderedUpdate.length / 2);
+        sumOfMiddleNumbers += orderedUpdate[middleIndex]; // Add middle number
+    });
+
+    console.log(`corrected lines sum: ${sumOfMiddleNumbers}`);
+}
+
+function reorderUpdate(update) {
+    return update.sort((a, b) => {
+        const keyAB = '' + a + b;
+        const keyBA = '' + b + a;
+        if (rulesMap[keyAB]) return -1; // a should come before b
+        if (rulesMap[keyBA]) return 1;  // b should come before a
+        return 0; // No direct rule, treat as equal
+    });
+}
+
 const rules = `96|54
 79|47
 79|13
@@ -1407,113 +1514,6 @@ const inputTest = `75,47,61,53,29
 75,97,47,61,53
 61,13,29
 97,13,75,29,47`;
-
-// lvl1
-
-// change rulesTest -> rules
-const rulesMap = rules.split('\n').reduce((map, line) => {
-    const [num1, num2] = line.split('|').map(Number);
-    const key = '' + num1 + num2;
-    map[key] = true; // if the key passed correctly, than the rule was followed
-    return map;
-}, {});
-
-function solveFirstPuzzle(input) {
-    const inputArray = input.split('\n').map(line => line.split(',').map(Number));
-
-    let correctUpdatesIndexes = [];
-
-    for (let i = 0; i < inputArray.length; i++) {
-
-        let isLineValid = true;
-        
-        for (let j = 0; j < inputArray[i].length; j++) {
-
-            let k = j + 1;
-            while (isLineValid && k < inputArray[i].length) {
-                isLineValid = validateTwoNumbersWithRule(inputArray[i][j], inputArray[i][k]);
-                k++;
-            }
-        }
-        if (isLineValid) {
-            correctUpdatesIndexes.push(i);
-        }
-    }
-
-    console.log(correctUpdatesIndexes);
-    let result = sumMiddleEntries(inputArray, correctUpdatesIndexes);
-    console.log(`sum: ${result}`);
-}
-
-function validateTwoNumbersWithRule(num1, num2) {
-
-    let key = '' + num1 + num2;
-    if (rulesMap[key]) {
-        return true; // num1 comes before num2
-    }
-
-    return false; // num1 does not come before num2
-}
-
-function sumMiddleEntries(array, correctIndexes) {
-    let result = 0;
-
-    for (let i = 0; i < correctIndexes.length; i++) {
-        let line = array[correctIndexes[i]];
-        let middleIndex = Math.floor(line.length / 2);
-        result += line[middleIndex]; // Fix: Access the correct line
-    }
-
-    return result;
-}
-
-
-
-// lvl 2
-
-function solveSecondPuzzle(input) {
-    const inputArray = input.split('\n').map(line => line.split(',').map(Number));
-
-    let falseUpdatesIndexes = [];
-
-    for (let i = 0; i < inputArray.length; i++) {
-
-        let isLineValid = true;
-        
-        for (let j = 0; j < inputArray[i].length; j++) {
-
-            let k = j + 1;
-            while (isLineValid && k < inputArray[i].length) {
-                isLineValid = validateTwoNumbersWithRule(inputArray[i][j], inputArray[i][k]);
-                k++;
-            }
-        }
-        if (!isLineValid) {
-            falseUpdatesIndexes.push(i);
-        }
-    }
-
-    let sumOfMiddleNumbers = 0;
-
-    falseUpdatesIndexes.forEach(index => {
-        const unorderedUpdate = inputArray[index];
-        const orderedUpdate = reorderUpdate(unorderedUpdate); // Reorder update
-        const middleIndex = Math.floor(orderedUpdate.length / 2);
-        sumOfMiddleNumbers += orderedUpdate[middleIndex]; // Add middle number
-    });
-
-    console.log(`corrected lines sum: ${sumOfMiddleNumbers}`);
-}
-
-function reorderUpdate(update) {
-    return update.sort((a, b) => {
-        const keyAB = '' + a + b;
-        const keyBA = '' + b + a;
-        if (rulesMap[keyAB]) return -1; // a should come before b
-        if (rulesMap[keyBA]) return 1;  // b should come before a
-        return 0; // No direct rule, treat as equal
-    });
-}
 
 // solveFirstPuzzle(input);
 solveSecondPuzzle(input)
