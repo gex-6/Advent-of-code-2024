@@ -53,7 +53,7 @@ function sumMiddleEntries(array, correctIndexes) {
     for (let i = 0; i < correctIndexes.length; i++) {
         let line = array[correctIndexes[i]];
         let middleIndex = Math.floor(line.length / 2);
-        result += line[middleIndex]; // Fix: Access the correct line
+        result += line[middleIndex];
     }
 
     return result;
@@ -88,9 +88,9 @@ function solveSecondPuzzle(input) {
 
     falseUpdatesIndexes.forEach(index => {
         const unorderedUpdate = inputArray[index];
-        const orderedUpdate = reorderUpdate(unorderedUpdate); // Reorder update
+        const orderedUpdate = reorderUpdate(unorderedUpdate);
         const middleIndex = Math.floor(orderedUpdate.length / 2);
-        sumOfMiddleNumbers += orderedUpdate[middleIndex]; // Add middle number
+        sumOfMiddleNumbers += orderedUpdate[middleIndex];
     });
 
     console.log(`corrected lines sum: ${sumOfMiddleNumbers}`);
@@ -100,9 +100,9 @@ function reorderUpdate(update) {
     return update.sort((a, b) => {
         const keyAB = '' + a + b;
         const keyBA = '' + b + a;
-        if (rulesMap[keyAB]) return -1; // a should come before b
-        if (rulesMap[keyBA]) return 1;  // b should come before a
-        return 0; // No direct rule, treat as equal
+        if (rulesMap[keyAB]) return -1; 
+        if (rulesMap[keyBA]) return 1; 
+        return 0;
     });
 }
 
