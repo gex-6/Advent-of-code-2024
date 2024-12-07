@@ -1,6 +1,6 @@
 // https://adventofcode.com/2024/day/5
 
-// lvl1
+// lvl 1
 
 // change rulesTest -> rules
 const rulesMap = rules.split('\n').reduce((map, line) => {
@@ -58,7 +58,6 @@ function sumMiddleEntries(array, correctIndexes) {
 
     return result;
 }
-
 
 
 // lvl 2
