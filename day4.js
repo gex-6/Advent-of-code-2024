@@ -1,5 +1,7 @@
 // https://adventofcode.com/2024/day/4
 
+// lvl 1
+
 const directions = [
     [-1, 0],  // Up
     [1, 0],   // Down
@@ -43,6 +45,8 @@ function findXMAS(input) {
 
     console.log(xmasCounter);
 }
+
+// lvl 2
 
 function findMas(input) {
     const inputArray = input.split('\n').map(line => line.split(''));
